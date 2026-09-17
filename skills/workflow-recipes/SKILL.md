@@ -1,0 +1,162 @@
+---
+name: workflow-recipes
+description: 当用户描述自己处在项目某个阶段、或问“我现在该怎么做 / 该用哪些 skill / 下一步干什么”时使用。覆盖项目全生命周期：起步方向、需求对齐、设计、规划拆解、实现、排错、重构、协作交接、学习、交付、环境配置、文档写作。用户不需要知道任何 skill 名字——说清处境和想要的结果即可。
+---
+
+# Workflow Recipes — 场景配方库
+
+用户不需要记 skill 名字，也不需要翻历史对话找 prompt。
+**他说处境，你给配方：用哪些 skill、按什么顺序、每步产出什么。**
+
+## 环境前提：先确定 skills 目录
+
+配方里用 **`<skills-dir>`** 指代 skill 安装目录。**不同版本路径不同**：
+
+| 版本 | 路径 |
+|---|---|
+| WorkBuddy 国际版 | `~/.workbuddy-ai/skills/`　（Windows: `C:\Users\<你>\.workbuddy-ai\skills\`） |
+| WorkBuddy 国内版 | `~/.workbuddy/skills/`　（Windows: `C:\Users\<你>\.workbuddy\skills\`） |
+
+**怎么确定**：看本 `SKILL.md` 自己所在的位置——它就在 skills 目录下面，取它的父目录即可。
+需要执行命令时，把 `<skills-dir>` 换成实际路径。**不要假定是哪一个。**
+
+## 第 0 步：看手上有什么牌
+
+**动手前先读同目录的 `GLOBAL-INDEX.md`** —— 它列出本机**全部**已安装 skill（含包外别人装的）、
+来源包、调用方式（U/M）、用途分组。不读它，你只看得见配方里点名的那几个，
+用户另外装的有用 skill 就漏掉了。
+
+**先确认索引没过期**（列一次 skills 目录就能判断）：把它记录的数量和 skills 目录的实际子目录数比一下。
+
+| 情况 | 怎么办 |
+|---|---|
+| 索引不存在（新机器 / 只复制了 SKILL.md） | 跑 `python <本 skill 目录>/scripts/rebuild-index.py` 生成，再读 |
+| 存在但对不上（装了新 skill / 删了旧的） | 同样跑一次脚本重建，再读 |
+| 一致 | 直接读 |
+
+> 脚本在 `<本 skill 目录>/scripts/rebuild-index.py`，**自包含**，不依赖其他包。
+> 脚本也不在（只复制了 SKILL.md）→ 跳过索引，只用配方点名的 skill，并告诉用户
+> 「全局索引没生成，包外 skill 暂时查不到，跑一次 `rebuild-index.py` 即可」。
+>
+> 索引是**本机生成物**，不进分享包（`pack/build.py` 已排除）—— 所以**它可能本来就不在**，这是正常的。
+
+**读完再进下面的三步走。** 索引里新装的未知 skill 会被标成「未分类」，当独立 skill 用即可。
+
+## 三步走
+
+### 1. 定位阶段
+
+先判断他现在在哪个阶段。他说得清楚就直接对号；说不清就问**一个**问题（不要问一串）：
+
+> "你现在是「还没想清楚要做什么」，还是「想清楚了但不知道怎么拆」，还是「代码写了但跑不对」？"
+
+**拿不准时先问，别硬套。** 猜错阶段的代价 > 多问一句的代价 —— 用「一次只问一个问题」
+问那个**最能区分两个候选阶段**的问题，而不是硬选一个往下走。
+门槛是「**明显对上才出手**」，不是「要 100% 确定才出手」。
+
+| 他说的 | 阶段 | 读哪个配方 |
+|---|---|---|
+| 想法模糊、方向没定、不知道做什么 | 起步 | [01-kickoff](references/01-kickoff.md) |
+| 有个想法，怕做偏、要打磨需求 | 对齐 | [02-alignment](references/02-alignment.md) |
+| 要做界面 / 改界面 / 定视觉方向 | 设计 | [03-design](references/03-design.md) |
+| 想清楚要做什么了，不知道怎么拆 | 规划 | [04-planning](references/04-planning.md) |
+| 照 spec 写代码、要加功能 | 实现 | [05-implementation](references/05-implementation.md) |
+| 报错、跑不起来、慢、间歇性故障 | 排错 | [06-debugging](references/06-debugging.md) |
+| 代码能跑但难改、要重构、要加测试 | 重构 | [07-refactoring](references/07-refactoring.md) |
+| 上下文要满、要换 session、要交接 | 协作 | [08-collaboration](references/08-collaboration.md) |
+| 要学一个新东西、准备考试/面试 | 学习 | [09-learning](references/09-learning.md) |
+| 要提交、要 review、要合并、要发布 | 交付 | [10-shipping](references/10-shipping.md) |
+| 装环境、配 CI、填密钥、走第三方后台 | 配置 | [11-setup-docs](references/11-setup-docs.md) |
+| 要写文档 / 写 skill / 改 AGENTS.md | 文档 | [11-setup-docs](references/11-setup-docs.md) |
+| 完全没头绪，也不知道自己在哪个阶段 | — | 用 `/ask-matt`，或者按 01 起步处理 |
+
+### 2. 读配方并复述计划
+
+读对应 reference 文件，然后**先把计划讲给用户听**：
+「我打算按 X → Y → Z 走，每步产出 A、B、C。要调整吗？」
+
+**别不吭声就开干。** 用户要能判断这条路对不对。
+
+### 3. 按序列执行
+
+配方里的 skill 序列是有顺序原因的——前一步的产出是后一步的输入。
+**不要跳步**，除非用户明确说跳，且你要指出跳过的代价。
+
+---
+
+## 执行原则
+
+1. **一次只让一个「流程型」skill 主导。** 流程型 = finesse-ui / impeccable / ui-upgrade / wayfinder / implement / triage。它们各自是端到端流程，同时跑会互相覆盖决策。其余 skill 是「纪律型」或「查询型」，可以随时被调用。
+
+   **「既要 A 又要 B」怎么办** —— 别自己替用户选，**给三个选项让他挑**：
+
+   | 选项 | 什么时候用 |
+   |---|---|
+   | **串行** | 两件事有依赖（先重构完再改界面，不然白改） |
+   | **分工** | 两件事互不干扰（一边改后端一边改前端） |
+   | **只跑一个** | 其中一件是主，另一件顺手提一句就够 |
+
+   例：用户说「既要重构又要顺手把界面弄好看点」→ 把这三条摆出来，问一句「你想怎么走？」
+
+   **多个 skill 同时命中，谁优先**（这是机制层面，和上面的用户诉求不是一回事）：
+
+   - **流程型优先于领域型** —— 先定方法，再干活。
+     例：既命中 `tdd`（流程）又命中 `ui-styling`（领域）→ 先用 tdd 定测试怎么写，再进 ui-styling。
+   - 同为流程型且都命中 → **更具体（范围更窄）的赢**；一样具体按字母序。
+   - **互不冲突的可以一起上** —— 不是所有命中都要二选一。
+
+2. **每步都有可见产出。** 说完一个阶段要告诉用户「这一步产出了什么、存在哪」。没有产出的步骤是在空转。
+
+3. **该问就问，但一次只问一个。** 配方里标注了「需确认」的地方必须问；能自己查的（文件、代码、目录）自己去查，别问用户。
+
+4. **配方是起点不是枷锁。** 用户的实际情况和配方不符时，说明你调整了什么、为什么。
+
+5. **不确定用哪个 → `/ask-matt`。** 它是全量 skill 索引的路由器（覆盖本机**全部**已装 skill，含包外），
+   本 skill 是它的「按阶段编排」版本。分工：
+   - **`/ask-matt`**：用户主动问「我该用哪个」→ 回答单点问题
+   - **`workflow-recipes`（本 skill）**：用户描述处境 → 自动给出**多步序列 + 每步产出**
+
+---
+
+## 配方文件
+
+| 文件 | 覆盖 |
+|---|---|
+| [01-kickoff.md](references/01-kickoff.md) | 方向模糊、题目没定、大工程看不清路径 |
+| [02-alignment.md](references/02-alignment.md) | 需求打磨、防止做偏、把想法变成可执行的东西 |
+| [03-design.md](references/03-design.md) | 从零做界面 / 改界面质感 / 查设计事实 / 定视觉方向 |
+| [04-planning.md](references/04-planning.md) | spec 撰写、任务拆解、优先级、blocking 关系 |
+| [05-implementation.md](references/05-implementation.md) | 按 plan 写代码、TDD、原型验证 |
+| [06-debugging.md](references/06-debugging.md) | 报错、性能回退、间歇性 bug、环境问题 |
+| [07-refactoring.md](references/07-refactoring.md) | 架构改进、领域模型、测试补齐、全库重构 |
+| [08-collaboration.md](references/08-collaboration.md) | 上下文管理、交接、追问澄清、向他人提问 |
+| [09-learning.md](references/09-learning.md) | 学概念、学技术栈、做练习、准备毕设答辩 |
+| [10-shipping.md](references/10-shipping.md) | 提交前审查、解冲突、发布、交付说明 |
+| [11-setup-docs.md](references/11-setup-docs.md) | 环境配置、CI/密钥、写文档与 skill |
+
+---
+
+## 依赖与降级
+
+配方里点名的 skill 是**推荐实现**，不是硬依赖。别人装的可能不一样，按下面处理：
+
+| 情况 | 怎么办 |
+|---|---|
+| 配方点名的 skill 没装 | 查 [00-skill-map.md](references/00-skill-map.md)，那里按**能力**列了替代方案 |
+| 完全不想装那套包 | 直接告诉用户："这个配方需要一个能做 X 的 skill，你装了什么？我按你的 skill 集重新映射" |
+| 用户自己写了替代 skill | 按能力对应关系替换，配方顺序不变 |
+
+**配方的价值在顺序和方法论，不在具体 skill 名。** 顺序是硬的（前一步产出是后一步输入），工具是可换的。
+
+## 维护
+
+本 skill 自带索引重建脚本（**不依赖其他包**）：
+
+```bash
+python <skills-dir>/workflow-recipes/scripts/rebuild-index.py
+```
+
+它会扫描整个 skills 目录，重建全局索引并**校验配方里引用的 skill 名是否真实存在**。
+skill 数量或种类变化时跑一次。
+
+如果配方引用了已不存在的 skill，按脚本输出的提示或 `00-skill-map.md` 替换。

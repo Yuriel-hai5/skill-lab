@@ -1,0 +1,14 @@
+# 打包产物（可随时重新生成）
+pack/dist/
+
+# 部署目标记录（本机专有，换机器要重设）
+.deploy-target
+
+# Python
+__pycache__/
+*.pyc
+
+# 编辑器
+.vscode/
+.idea/
+.DS_Store
