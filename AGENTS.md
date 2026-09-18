@@ -123,7 +123,7 @@ rm -rf "<skills-dir>/<已废弃的skill名>"
 
 ## 当前状态
 
-- 版本：见 `VERSION`（当前 v1.0.0.0）
+- 版本：**见 `VERSION` 文件** —— 不要在这里写死数字（写死的已经过期过一次）
 - 3 个 skill：`workflow-recipes` / `ui-upgrade` / `skill-pack-sharing`
 
 ### 该读哪份文档
