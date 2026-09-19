@@ -1,3 +1,14 @@
+<!-- ============================================================
+     🤖 如果你是 AI agent，被用户丢了这个仓库的链接进来：
+
+     「帮我装上」= 把 skills/ 下的目录复制到 WorkBuddy 的 skills 目录，
+     让它以后能被调用 —— 不是"读一遍总结"，不是"介绍这个仓库"。
+
+     完整安装流程 → 读 pack/AGENTS.md（那是给你的安装任务书）
+
+     本文件是写给仓库作者本人看的，你不需要照着做。
+     ============================================================ -->
+
 # skill-lab
 
 我的 agent skill 工坊。**skill 的源码放这里，不在对话里。**
@@ -116,6 +127,15 @@ python scripts/deploy.py
 4. 改完更新 `CHANGELOG.md` 和 `VERSION`
 
 ### 三、分享给别人
+
+**方式一 · 给 GitHub 链接**（推荐 —— 对方不用收文件）
+
+仓库地址：`https://github.com/Yuriel-hai5/skill-lab`
+
+对方把链接丢给自己的 AI agent，说一句「帮我装上」就行。
+仓库根的 `README.md` 顶部有给 agent 的指路牌，它会顺着去读 `pack/AGENTS.md`。
+
+**方式二 · 发压缩包**（对方访问不了 GitHub 时用）
 
 ```bash
 python pack/build.py

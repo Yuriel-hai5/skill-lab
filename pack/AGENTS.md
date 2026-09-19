@@ -1,12 +1,13 @@
 # 给 AI Agent 的安装指令
 
-用户把本压缩包拖进对话，意思是：**「帮我装上」。**
+**用户给了你一个仓库链接**，或者**把压缩包拖进了对话** —— 两种情况下意思都一样：**「帮我装上」。**
 
 ⚠️ **先把"装上"理解清楚**：它指的是
 **把 skill 复制到 WorkBuddy 的 skills 目录，让它以后能被调用**——
-**不是**"解压到工作区看看"，**不是**"读一遍写个总结"，**不是**"介绍这个包有什么"。
+**不是**"解压到工作区看看"，**不是**"读一遍写个总结"，**不是**"介绍这个仓库有什么"。
 
-判断依据：用户说「帮我装上」「这是我找到的 skill，装上」「安装一下」——全都按本文件执行。
+判断依据：用户说「帮我装上」「这是我找到的 skill，装上」「安装一下」，
+或者**只是丢了一个链接过来**（那也等于"帮我装上"）—— 全都按本文件执行。
 
 按下面 5 步执行。**不要跳过第 0 步和第 5 步。**
 
@@ -47,28 +48,49 @@ ls -ldt "$USERPROFILE/.workbuddy-ai" "$USERPROFILE/.workbuddy"
 
 ---
 
-## 第 1 步：解压
+## 第 1 步：拿到文件（两种入口，先看清是哪种）
 
-先用 `unzip`，没有就用 Python 的 `zipfile`：
+### 入口 A · 用户给了**仓库链接**（GitHub）
+
+克隆或下载都行。**`git clone` 在部分网络下会挂死**，挂死就换 codeload：
+
+```bash
+# 方式一：浅克隆（有 git 时首选）
+git clone --depth 1 <仓库地址> <临时目录>
+
+# 方式二：下 zip（clone 挂死 / 没装 git 时用这个）
+curl -sL --max-time 180 -o pack.zip <仓库地址>/archive/refs/heads/main.zip
+unzip -q pack.zip -d <临时目录>
+```
+
+> 仓库地址形如 `https://github.com/<owner>/<repo>`。
+> 下完 zip 用 `unzip -t pack.zip` 验一下完整性。
+
+### 入口 B · 用户拖了**压缩包**
 
 ```bash
 unzip -q <压缩包路径> -d <临时目录>
 ```
 
-解压后应该看到：
+（没装 `unzip` 就用 Python 的 `zipfile`。）
 
-```
-workflow-recipes-pack/
-├── AGENTS.md            ← 本文件
-├── README.md
-├── workflow-recipes/    ┐
-├── ui-upgrade/          ├ skill 本体（数量可能变，以实际为准）
-├── skill-pack-sharing/  ┘
-└── optional/            ← 可选增强，见第 4 步
+### 拿到之后：先找 skill 在哪
+
+⚠️ **两种入口的目录结构不一样**，别搞混：
+
+| 入口 | skill 在哪 |
+|---|---|
+| A · 仓库链接 | `<仓库根>/skills/` 下面 |
+| B · 压缩包 | 包根目录下（和 `AGENTS.md` 同级） |
+
+**怎么判断哪些是 skill**：skill 目录的特征是**里面有 `SKILL.md`**。
+
+```bash
+find <上面那个目录> -mindepth 2 -maxdepth 2 -name SKILL.md | grep -v '/optional/'
 ```
 
-**怎么判断哪些是 skill**：包根下除了 `AGENTS.md` / `README.md` / `optional/` 之外，
-**每个目录都是一个 skill**。用 `ls -d */` 列出来就是清单。
+每条输出是 `<源目录>/<skill 名>/SKILL.md`，它的父目录名就是 skill 名
+（数量可能变，以实际为准）。**`optional/` 下面的不算** —— 那是可选增强，见第 4 步。
 
 ---
 
@@ -77,8 +99,13 @@ workflow-recipes-pack/
 ### ⚠️ 先做冲突检查（**别跳过**）
 
 ```bash
-cd <解压目录>/workflow-recipes-pack
-SKILLS=$(ls -d */ | grep -v '^optional/$' | tr -d '/')
+# SRC = 第 1 步找到的 skill 源目录
+#   入口 A（仓库）   → SRC=<仓库根>/skills
+#   入口 B（压缩包） → SRC=<解压目录>/workflow-recipes-pack
+SRC=<skill 源目录>
+
+SKILLS=$(find "$SRC" -mindepth 2 -maxdepth 2 -name SKILL.md \
+         | grep -v '/optional/' | xargs -n1 dirname | xargs -n1 basename | sort -u)
 
 for s in $SKILLS; do
   [ -e "<skills-dir>/$s" ] && echo "冲突: $s 已存在"
@@ -96,7 +123,7 @@ GNU cp 会嵌套一层，MSYS/Git Bash 的 cp 会**静默合并**（旧文件保
 
 ```bash
 for s in $SKILLS; do
-  cp -r "$s" "<skills-dir>/"
+  cp -r "$SRC/$s" "<skills-dir>/"
 done
 ```
 
