@@ -40,7 +40,7 @@ skills/                          ← 改这里
 
 ### 2. skill 文件里不许有本机绝对路径
 
-❌ `C:\Users\Administrator\.workbuddy-ai\skills\ui-ux-pro-max\scripts\search.py`
+❌ `C:\Users\<你的用户名>\.workbuddy-ai\skills\ui-ux-pro-max\scripts\search.py`
 ✅ `<skills-dir>/ui-ux-pro-max/scripts/search.py`
 
 需要指代 skill 安装目录时用 **`<skills-dir>`**，并在 SKILL.md 里说明怎么推断

@@ -93,7 +93,7 @@
 > **为什么要新开对话**：skill 在对话开始时加载。旧对话里 skill 是"迟到"的，不会被自动认出来。
 >
 > **旧对话想用**：输入 `/workflow-recipes`（实测有效），或者让 AI 直接读
-> `C:\Users\Administrator\.workbuddy-ai\skills\workflow-recipes\SKILL.md`。
+> `C:\Users\<你的用户名>\.workbuddy-ai\skills\workflow-recipes\SKILL.md`。
 
 ### 二、改 skill
 
@@ -106,7 +106,7 @@ python scripts/deploy.py
 
 > **第一次**要指定目标目录（因为你这台机器两个版本都装了）：
 > ```bash
-> python scripts/deploy.py --target "C:\Users\Administrator\.workbuddy-ai\skills"
+> python scripts/deploy.py --target "C:\Users\<你的用户名>\.workbuddy-ai\skills"
 > ```
 > 之后会**记住**，直接 `python scripts/deploy.py` 就行。
 >
@@ -130,7 +130,7 @@ python pack/build.py
 
 ### ⚠️ 改 skill 时，对话要在这个文件夹里开
 
-**在这个文件夹里开对话**（`C:\Users\Administrator\Desktop\skill-lab\`），项目根的 `AGENTS.md`
+**在这个文件夹里开对话**（`C:\Users\<你的用户名>\Desktop\skill-lab\`），项目根的 `AGENTS.md`
 才会被自动加载，AI 才知道"源码在这里、部署目录是目标、改完要 deploy"。
 
 在别的地方开对话，AI 读不到这些规矩，很可能**直接去改部署目录** ——
@@ -148,7 +148,7 @@ skills/                          ← 你改这里
 
 ### 路径一律用 `<skills-dir>` 占位符
 
-skill 文件里**不许出现** `C:\Users\Administrator\...` 这类本机路径 —— 否则分享给别人就坏了。
+skill 文件里**不许出现** `C:\Users\<你的用户名>\...` 这类本机路径 —— 否则分享给别人就坏了。
 
 需要指代 skill 安装目录时，写 `<skills-dir>`，并在 SKILL.md 里说明怎么推断
 （取 SKILL.md 自己所在目录的父目录）。
@@ -190,6 +190,6 @@ skill 文件里**不许出现** `C:\Users\Administrator\...` 这类本机路径 
 
 | 东西 | 路径 |
 |---|---|
-| 项目源码 | `C:\Users\Administrator\Desktop\skill-lab\` |
-| 部署目标（WorkBuddy 读这个） | `C:\Users\Administrator\.workbuddy-ai\skills\` |
+| 项目源码 | `C:\Users\<你的用户名>\Desktop\skill-lab\` |
+| 部署目标（WorkBuddy 读这个） | `C:\Users\<你的用户名>\.workbuddy-ai\skills\` |
 | 全局 skill 索引 | `<skills-dir>/workflow-recipes/GLOBAL-INDEX.md` |
