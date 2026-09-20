@@ -4,6 +4,32 @@
 
 ---
 
+## ⚠️ 动手前：先扫技能库（别跳）
+
+改这个项目的代码之前，先读本机 skill 索引 —— 很多 skill 是**按症状**命名的。
+不扫，它们永远不会被用上。
+
+读 `<skills-dir>/workflow-recipes/GLOBAL-INDEX.md`
+（本机是 `C:\Users\<你的用户名>\.workbuddy-ai\skills\`；
+如果它和 skills 目录对不上，先跑同目录的 `scripts/rebuild-index.py` 重建）。
+
+| 你要做的事 | 先看哪个 skill |
+|---|---|
+| 改 skill 的写法 / 加配方 / 改 `description` | `writing-for-agents`（给 agent 写文档的 reference）；内置 `skill-creator` |
+| 打包 skill 分享给别人 / 改 `pack/` | `skill-pack-sharing` |
+| 用户描述处境、问"我现在该怎么做" | `workflow-recipes` |
+| 改界面 / 做视觉设计 | `ui-upgrade` |
+
+**为什么写死这条**：2026-09-20 实测 —— 在另一个项目里，`workflow-recipes` 的
+`description` **已加载**（AI 复述出了新版独有措辞），但全程没查技能库，
+把已装的 `wpf-visual-bug-triage` 里**已经写着**的东西重新推导了一遍。
+事后自述：「**没查。这是我的疏漏。**」
+**skill 不被读，等于不存在。**
+
+> 出处：`skills/workflow-recipes/references/11-setup-docs.md` 的**配方 G**。
+
+---
+
 ## 这是什么项目
 
 `skill-lab` —— 荆丝的 agent skill 工坊。**skill 的源码在这里，不在对话里。**
