@@ -131,6 +131,8 @@ NON_SKILL = {
     "curl", "node", "python", "python3", "npx", "pnpm", "bun", "package.json",
     "pubspec.yaml", "AGENTS.md", "CLAUDE.md", "CONTEXT.md", "SKILL.md",
     "skill-creator",
+    # frontmatter 字段名 / 通用术语 —— 不是 skill 名，别报成"未安装"
+    "description", "name", "frontmatter", "disable-model-invocation",
 }
 
 
